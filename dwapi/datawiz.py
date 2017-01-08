@@ -11,7 +11,7 @@ import warnings
 
 logging.basicConfig(
     format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s',
-    level = logging.DEBUG, file = 'C:/log.txt')
+    level = logging.DEBUG)
 
 INTERVALS = ['days', 'weeks', 'months', 'years']
 MODEL_FIELDS = ['turnover', 'qty', 'receipts_qty', 'stock_qty',
