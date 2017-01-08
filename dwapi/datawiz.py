@@ -3,7 +3,7 @@
 
 import datetime, shutil, os, zipfile
 import pandas as pd
-from datawiz_auth import Auth
+from .datawiz_auth import Auth
 from functools import wraps
 import logging
 import csv
@@ -223,7 +223,7 @@ class DW(Auth):
         datetime_format = '%Y-%m-%d %H:%M:%S'
         date_format = '%Y-%m-%d'
         date_fields = ['date', 'date_from', 'date_to']
-        for key, value in obj.iteritems():
+        for key, value in obj.items():
             if key in date_fields and obj[key]:
                 obj[key] = datetime.datetime.strptime(value, datetime_format)
             elif key in fields:
@@ -1470,14 +1470,14 @@ class DW(Auth):
         
         for file,data in files.iteritems():
 
-            print 'Donwloading %s'%file
+            print ('Donwloading %s'%file)
             logging.info('Donwloading %s'%file)
             with open(os.path.join(tmp_dir, '%s.csv'%file), 'w') as fh:
                 writer = csv.DictWriter(fh, fieldnames=data[1], dialect='unixpwd')
                 writer.writeheader()
                 for items in self._get_raw_data(data[0]):
                     [writer.writerow(dict((k, v.encode('utf-8') if isinstance(v, unicode) else v) for k, v in x.iteritems())) for x in items]
-                print '%s done'%file
+                print ('%s done'%file)
                 logging.info('%s done!'%file)
 
         ziph = zipfile.ZipFile(os.path.join(path, 'archive-%s.zip')%datetime.datetime.now().strftime('%Y-%m-%d'), 'w')

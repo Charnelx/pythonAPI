@@ -6,7 +6,11 @@
 import requests, json
 from requests.exceptions import RequestException
 from httpsig.requests_auth import HTTPSignatureAuth
-import urllib
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode
+
 
 TEST_KEY_ID = 'test1@mail.com'
 TEST_SECRET = 'test2@cbe47a5c9466fe6df05f04264349f32b'
@@ -56,11 +60,11 @@ class Auth:
         # Відсилаємо запит до api, параметри кодуємо функцією urlencode.
         # Особливість urlencode - кодує значення somevar = None в строку "somevar=None", тому замінюємо всі None на пусті значення
         try:
-            response = requests.get('%s/%s/?%s'%(self.API_URL, resource_url, urllib.urlencode(params).replace('None', '')),
+            response = requests.get('%s/%s/?%s'%(self.API_URL, resource_url, urlencode(params).replace('None', '')),
                                     auth = auth,
                                     headers = self.HEADERS,
                                     data=json.dumps(data))
-        except RequestException, error:
+        except RequestException as error:
             raise APIGetError("Error, while loading data. %s"%error)
 
         # Якщо сервер повертає помилку, виводимо її
@@ -94,7 +98,7 @@ class Auth:
         # Відсилаємо запит до api, параметри кодуємо функцією urlencode.
         try:
             response = requests.post('%s/%s/'%(self.API_URL, resource_url), data = json.dumps(data),  auth = auth, headers = headers)
-        except RequestException, error:
+        except RequestException as error:
             raise APIUploadError("Error, while loading data. %s"%error)
 
         # Якщо сервер повертає помилку, виводимо її
@@ -102,7 +106,7 @@ class Auth:
         if not response.status_code in [requests.codes.OK, requests.codes.CREATED]:
             try:
                 error = response.json()
-                print error
+                print(error)
                 # print error
                 # Якщо data - це чанк, виду [obj, obj, ...]
                 if chunk and isinstance(error, list):
@@ -139,7 +143,7 @@ class Auth:
         # Відсилаємо запит до api, параметри кодуємо функцією urlencode.
         try:
             response = requests.put('%s/%s/'%(self.API_URL, resource_url), params = params, data = json.dumps(data),  auth = auth, headers = self.HEADERS)
-        except RequestException, error:
+        except RequestException as error:
             raise APIUploadError("Error, while loading data. %s"%error)
 
         # Якщо сервер повертає помилку, виводимо її
@@ -163,7 +167,7 @@ class Auth:
                     headers = SIGNATURE_HEADERS)
         try:
             response = requests.options('%s/%s/'%(self.API_URL, resource_url), auth = auth, headers = self.HEADERS)
-        except RequestException, error:
+        except RequestException as error:
             raise APIUploadError("Error, while loading data. %s"%error)
         return response.json()
 
