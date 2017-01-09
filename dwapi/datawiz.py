@@ -9,9 +9,7 @@ import logging
 import csv
 import warnings
 
-logging.basicConfig(
-    format = u'%(filename)s[LINE:%(lineno)d]# %(levelname)-8s [%(asctime)s]  %(message)s',
-    level = logging.DEBUG)
+logging.basicConfig(level = logging.DEBUG)
 
 INTERVALS = ['days', 'weeks', 'months', 'years']
 MODEL_FIELDS = ['turnover', 'qty', 'receipts_qty', 'stock_qty',
